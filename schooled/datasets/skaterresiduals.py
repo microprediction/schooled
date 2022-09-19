@@ -24,14 +24,13 @@ def random_skater_residual_dataframe(min_obs:int):
     return df
 
 
-def random_skater_residual_concat(min_obs) -> [float]:
+def concatenated_skater_residuals(min_obs) -> [float]:
     """ Concatenate model residuals from different models """
     df = random_skater_residual_dataframe(min_obs=min_obs)
     n_elts = np.prod(df.shape)
-    return df.values.reshape((n_elts,1),order="F")
+    return df.values.reshape((n_elts,1),order="F").squeeze()
 
-def random_skater_residual_dataset(min_obs):
-    v = random_skater_residual_concat(min_obs=min_obs)
+
 
 
 def show_some_iterations():
@@ -45,7 +44,7 @@ def show_some_iterations():
 def plot_some_residuals():
     df = random_skater_residual_dataframe(min_obs=20)
     print(df[:2].transpose())
-    v = random_skater_residual_concat(min_obs=1000)
+    v = concatenated_skater_residuals(min_obs=1000)
     import matplotlib.pyplot as plt
     for k in range(5000,15000,1000):
         plt.plot(v[k:k+20])
