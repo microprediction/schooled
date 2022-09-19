@@ -1,3 +1,8 @@
+# Experiments
+nni_experiments/quickstart/data
+nni_experiments/residuals/data
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
