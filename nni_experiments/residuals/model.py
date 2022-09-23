@@ -1,30 +1,20 @@
-"""
-Port PyTorch Quickstart to NNI
-==============================
-This is a modified version of `PyTorch quickstart`_.
-It can be run directly and will have the exact same result as original version.
-Furthermore, it enables the ability of auto tuning with an NNI *experiment*, which will be detailed later.
-It is recommended to run this script directly first to verify the environment.
-There are 2 key differences from the original version:
-1. In `Get optimized hyperparameters`_ part, it receives generated hyperparameters.
-2. In `Train model and report accuracy`_ part, it reports accuracy metrics to NNI.
-.. _PyTorch quickstart: https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
-"""
 
 # %%
 import nni
+import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import datasets
-from torchvision.transforms import ToTensor
+from schooled.datasets.skaterresidualdataset import ResidualDataset, BATCH_SIZE
+
+
 
 # %%
 # Hyperparameters to be tuned
 # ---------------------------
 # These are the hyperparameters that will be tuned.
 params = {
-    'features': 512,
+    'num_hidden':16,
     'lr': 0.001,
     'momentum': 0,
 }
@@ -41,13 +31,11 @@ print(params)
 # %%
 # Load dataset
 # ------------
-training_data = datasets.FashionMNIST(root="data", train=True, download=True, transform=ToTensor())
-test_data = datasets.FashionMNIST(root="data", train=False, download=True, transform=ToTensor())
+training_data = ResidualDataset(end_index=4000)
+test_data = ResidualDataset(start_index=4000)
 
-batch_size = 64
-
-train_dataloader = DataLoader(training_data, batch_size=batch_size)
-test_dataloader = DataLoader(test_data, batch_size=batch_size)
+train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE)
+test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE)
 
 # %%
 # Build model with hyperparameters
@@ -56,56 +44,89 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
 
 
-class NeuralNetwork(nn.Module):
+# If your input data is of shape (seq_len, batch_size, features) then you don’t need batch_first=True and your LSTM will give output of shape (seq_len, batch_size, hidden_size).
+# If your input data is of shape (batch_size, seq_len, features) then you need batch_first=True and your LSTM will give output of shape (batch_size, seq_len, hidden_size).
+
+class ShallowRegressionLSTM(nn.Module):
+    # https://www.crosstab.io/articles/time-series-pytorch-lstm
+
     def __init__(self):
-        super(NeuralNetwork, self).__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28*28, params['features']),
-            nn.ReLU(),
-            nn.Linear(params['features'], params['features']),
-            nn.ReLU(),
-            nn.Linear(params['features'], 10)
+        super().__init__()
+        self.input_size = 1  # this is the number of features
+        self.hidden_units = params['num_hidden']
+        self.num_layers = 1
+
+        self.lstm = nn.LSTM(
+            input_size=self.input_size,
+            hidden_size=self.hidden_units,
+            batch_first=True,
+            num_layers=self.num_layers
         )
 
+        self.linear = nn.Linear(in_features=self.hidden_units, out_features=1)
+
     def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
+        batch_size = x.shape[0]
+        h0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
+        c0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
+        _, (hn, _) = self.lstm(x, (h0, c0))
+        out = self.linear(hn[0]).flatten()  # First dim of Hn is num_layers, which is set to 1 above.
 
-model = NeuralNetwork().to(device)
+        return out
 
-loss_fn = nn.CrossEntropyLoss()
+model = ShallowRegressionLSTM().to(device)
+loss_fn = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=params['lr'], momentum=params['momentum'])
 
 # %%
 # Define train and test
 # ---------------------
-def train(dataloader, model, loss_fn, optimizer):
-    size = len(dataloader.dataset)
+
+def train(data_loader, model, loss_function, optimizer):
+    num_batches = len(data_loader)
+    total_loss = 0
     model.train()
-    for batch, (X, y) in enumerate(dataloader):
-        X, y = X.to(device), y.to(device)
-        pred = model(X)
-        loss = loss_fn(pred, y)
+
+    for X, y in data_loader:
+        output = model(X)
+        loss = loss_function(output, y)
+
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-def test(dataloader, model, loss_fn):
-    size = len(dataloader.dataset)
-    num_batches = len(dataloader)
+        total_loss += loss.item()
+
+    avg_loss = total_loss / num_batches
+    print(f"Train loss: {avg_loss}")
+
+
+def verify(data_loader, model, loss_function):
+
+    num_batches = len(data_loader)
+    total_loss = 0
+    total_zero_loss = 0
+
     model.eval()
-    test_loss, correct = 0, 0
     with torch.no_grad():
-        for X, y in dataloader:
-            X, y = X.to(device), y.to(device)
-            pred = model(X)
-            test_loss += loss_fn(pred, y).item()
-            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
-    test_loss /= num_batches
-    correct /= size
-    return correct
+        for X, y in data_loader:
+            output = model(X)
+            zero_output = torch.from_numpy( np.zeros_like(output) )
+            loss_value = loss_function(output, y).item()
+            zero_loss_value = loss_function( zero_output, y).item()
+
+            if np.isfinite(loss_value):
+                total_loss += loss_value
+                total_zero_loss += zero_loss_value
+            else:
+                print(loss_value)
+                raise Exception('loss is not finite')
+
+    rel_loss = total_loss / total_zero_loss
+    print(f"Rel loss: {rel_loss}")
+    return rel_loss
+
+
 
 # %%
 # Train model and report accuracy
@@ -115,6 +136,6 @@ epochs = 5
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataloader, model, loss_fn, optimizer)
-    accuracy = test(test_dataloader, model, loss_fn)
+    accuracy = verify(test_dataloader, model, loss_fn)
     nni.report_intermediate_result(accuracy)
 nni.report_final_result(accuracy)

@@ -75,7 +75,7 @@ class NeuralNetwork(nn.Module):
 
 model = NeuralNetwork().to(device)
 
-loss_fn = nn.CrossEntropyLoss()
+loss_fn = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=params['lr'], momentum=params['momentum'])
 
 # %%

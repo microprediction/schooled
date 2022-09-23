@@ -2,8 +2,9 @@ import random
 SKATER_RESIDUAL_URL = 'https://raw.githubusercontent.com/microprediction/precisedata/main/skaterresiduals/skater_residuals_0.csv'
 n_data = 450
 import pandas as pd
+from functools import lru_cache
+import math
 import numpy as np
-from schooled.datasets.util import TimeseriesDataset
 
 
 def random_skater_residual_dataframe(min_obs:int):
@@ -32,15 +33,6 @@ def concatenated_skater_residuals(min_obs) -> [float]:
 
 
 
-
-def show_some_iterations():
-    train_dataset = TimeseriesDataset(X_lstm, y_lstm, seq_len=4)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=3, shuffle=False)
-
-    for i, d in enumerate(train_loader):
-        print(i, d[0].shape, d[1].shape)
-
-
 def plot_some_residuals():
     df = random_skater_residual_dataframe(min_obs=20)
     print(df[:2].transpose())
@@ -50,4 +42,16 @@ def plot_some_residuals():
         plt.plot(v[k:k+20])
     plt.grid()
     plt.show()
+
+
+
+# Serves data at precisedata repo in a torch dataset format
+
+@lru_cache()
+def memoized_residuals(seq_len=100):
+    r = concatenated_skater_residuals(min_obs=500)
+    n = int(math.floor(len(r)/(seq_len+1)))
+    m = n*(seq_len+1)
+    x = np.reshape(r[:m], newshape=(n,seq_len+1))
+    return x
 
