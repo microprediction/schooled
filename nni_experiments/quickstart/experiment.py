@@ -105,7 +105,7 @@ experiment.config.tuner.class_args['optimize_mode'] = 'maximize'
 # Configure how many trials to run
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # Here we evaluate 10 sets of hyperparameters in total, and concurrently evaluate 2 sets at a time.
-experiment.config.max_trial_number = 10
+experiment.config.max_trial_number = 1000
 experiment.config.trial_concurrency = 2
 # %%
 # You may also set ``max_experiment_duration = '1h'`` to limit running time.
