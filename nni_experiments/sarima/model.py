@@ -37,8 +37,8 @@ print(params)
 # Load dataset
 # ------------
 
-training_data = SarimaDataset(end_index=20000)
-test_data = SarimaDataset(start_index=20000)
+training_data = SarimaDataset(end_index=50000)
+test_data = SarimaDataset(start_index=10000)
 
 train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE)
 test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE)

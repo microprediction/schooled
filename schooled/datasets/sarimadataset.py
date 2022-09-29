@@ -2,7 +2,7 @@ from schooled.wherami import SKATER_DATA
 import numpy as np
 import pandas as pd
 
-SEQ_LEN = 22
+SEQ_LEN = 8
 SCALE = 0.1
 
 def load_skater_surrogates(seq_len=SEQ_LEN):
@@ -36,7 +36,7 @@ def load_skater_surrogate(file_no,seq_len):
 from torch.utils.data.dataset import Dataset
 import numpy as np
 
-BATCH_SIZE = 3
+BATCH_SIZE = 200
 
 
 class SarimaDataset(Dataset):
