@@ -13,7 +13,8 @@ from schooled.datasets.sarimadataset import SEQ_LEN
 # ---------------------------
 # These are the hyperparameters that will be tuned.
 params = {
-    'num_1':16,
+    'num_layers':1,
+    'num_1':1,
     'num_2':16,
     'num_3':16,
     'act_0':'Sigmoid',
@@ -35,8 +36,9 @@ print(params)
  
 # Load dataset
 # ------------
-training_data = SarimaDataset(end_index=10000)
-test_data = SarimaDataset(start_index=10000)
+
+training_data = SarimaDataset(end_index=20000)
+test_data = SarimaDataset(start_index=20000)
 
 train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE)
 test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE)
@@ -56,24 +58,41 @@ class ShallowRegression(nn.Module):
     # https://www.crosstab.io/articles/time-series-pytorch-lstm
 
 
-
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(in_features=SEQ_LEN,  out_features=params['num_1']),
-            getattr(nn, params['act_0'])(),
-            nn.Linear(in_features=params['num_1'], out_features=params['num_2']),
-            getattr(nn, params['act_1'])(),
-            nn.Linear(in_features=params['num_2'], out_features=params['num_3']),
-            getattr(nn, params['act_2'])(),
-            nn.Linear(in_features=params['num_3'], out_features=1)
-        )
-        self.linear = nn.Linear(in_features=params['num_1'], out_features=1)
+        if params['num_layers']==0:
+            self.stack = nn.Sequential(
+                nn.Linear(in_features=SEQ_LEN, out_features=1)
+            )
+        elif params['num_layers']==1:
+            self.stack = nn.Sequential(
+                nn.Linear(in_features=SEQ_LEN, out_features=params['num_1']),
+                getattr(nn, params['act_0'])(),
+                nn.Linear(in_features=params['num_1'], out_features=1)
+            )
+        elif params['num_layers']==2:
+            self.stack = nn.Sequential(
+                nn.Linear(in_features=SEQ_LEN, out_features=params['num_1']),
+                getattr(nn, params['act_0'])(),
+                nn.Linear(in_features=params['num_1'], out_features=params['num_2']),
+                getattr(nn, params['act_1'])(),
+                nn.Linear(in_features=params['num_2'], out_features=1)
+            )
+        elif params['num_layers']==3:
+            self.stack = nn.Sequential(
+                nn.Linear(in_features=SEQ_LEN,  out_features=params['num_1']),
+                getattr(nn, params['act_0'])(),
+                nn.Linear(in_features=params['num_1'], out_features=params['num_2']),
+                getattr(nn, params['act_1'])(),
+                nn.Linear(in_features=params['num_2'], out_features=params['num_3']),
+                getattr(nn, params['act_2'])(),
+                nn.Linear(in_features=params['num_3'], out_features=1)
+            )
 
     def forward(self, x):
         x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
+        logits = self.stack(x)
         return logits
 
 model = ShallowRegression().to(device)

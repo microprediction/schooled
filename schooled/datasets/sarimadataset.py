@@ -1,11 +1,29 @@
 from schooled.wherami import SKATER_DATA
 import numpy as np
+import pandas as pd
 
-SEQ_LEN = 20
+SEQ_LEN = 22
+SCALE = 0.1
 
 def load_skater_surrogates(seq_len=SEQ_LEN):
-    XYs = [ load_skater_surrogate(file_no=file_no,seq_len=seq_len) for file_no in range(1,3) ]
-    XY = np.concatenate(XYs, axis=0)
+    dfs = list()
+    for i in range(10):
+        url = 'https://raw.githubusercontent.com/microprediction/schooled/main/data/sarima/sk_autoarima/train_' + str(
+            i) + '.csv'
+        try:
+            df = pd.read_csv(url, header=None)
+            print(url)
+            dfs.append(df)
+        except Exception:
+            pass
+    df = pd.concat(dfs, axis=0)
+    df = df.dropna(how='any')
+    last_col = df.columns[-1]
+    y = (df[last_col].values) * SCALE
+    del df[last_col]
+    X = df.values[:, -seq_len-1:-1] * SCALE
+    Y = np.atleast_2d(y).transpose()
+    XY = np.concatenate([X,Y],axis=1)
     return XY
 
 

@@ -10,10 +10,11 @@ ACTIVATIONS = ['ELU','Hardshrink','Hardsigmoid','Hardtanh','Hardswish',
 ACTIVATIONS_0 = ['SoftSign','LogSigmoid','Tanhshrink','Hardtanh','Hardsigmoid','ReLU6','SoftPlus','SiLU']
 
 search_space = {
+    'num_layers':{'_type': 'choice','_value':[1,2,3]},
     'num_1': {'_type': 'choice', '_value': [1, 2, 4, 8]},
     'num_2': {'_type': 'choice', '_value': [1, 2, 4, 8, 16, 32, 64, 128]},
     'num_3': {'_type': 'choice', '_value': [1, 2, 4, 8]},
-    'act_0': {'_type': 'choice', '_value': ACTIVATIONS_0},
+    'act_0': {'_type': 'choice', '_value': ACTIVATIONS},
     'act_1': {'_type':'choice','_value':ACTIVATIONS},
     'act_2': {'_type': 'choice', '_value': ACTIVATIONS},
     'lr': {'_type': 'loguniform', '_value': [0.0001, 0.001, 0.1]},
