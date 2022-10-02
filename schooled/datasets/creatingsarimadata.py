@@ -5,8 +5,8 @@ from schooled.datasets.ornstein import simulate_arima_like_path
 
 NUM_ROWS = 10000
 SEQ_LEN = 20
-START_FILE_NO=4
-
+START_FILE_NO=200
+END_FILE_NO=300
 
 def skater_single_prediction(ys, f):
     """ One step ahead prediction for any skater """
@@ -25,7 +25,7 @@ def skater_single_prediction(ys, f):
 def make_data(plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
-    for file_no in range(START_FILE_NO,100):
+    for file_no in range(START_FILE_NO,END_FILE_NO):
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
