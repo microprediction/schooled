@@ -66,7 +66,7 @@ if __name__=='__main__':
         parser = argparse.ArgumentParser(description='IMDB model training')
         parser.add_argument('--start_file_no', help='number of epochs to run', default='1000')
         args = parser.parse_args()
-        make_data(args['start_file_no'])
+        make_data(start_file_no=args.start_file_no)
     
     
     
