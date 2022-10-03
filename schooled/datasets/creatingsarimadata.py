@@ -5,8 +5,8 @@ from schooled.datasets.ornstein import simulate_arima_like_path
 
 NUM_ROWS = 10000
 SEQ_LEN = 20
-START_FILE_NO=200
-END_FILE_NO=300
+START_FILE_NO=300
+END_FILE_NO=400
 
 def skater_single_prediction(ys, f):
     """ One step ahead prediction for any skater """
