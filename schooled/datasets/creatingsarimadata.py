@@ -29,6 +29,7 @@ def make_data(start_file_no, end_file_no=None,plot=False):
             end_file_no = start_file_no+100
         
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
+        csv = '/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
