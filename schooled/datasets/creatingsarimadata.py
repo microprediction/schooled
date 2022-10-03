@@ -3,10 +3,9 @@ import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
-NUM_ROWS = 10000
+NUM_ROWS = 10
 SEQ_LEN = 20
-START_FILE_NO=300
-END_FILE_NO=400
+
 
 def skater_single_prediction(ys, f):
     """ One step ahead prediction for any skater """
@@ -22,10 +21,13 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def make_data(plot=False):
+def make_data(start_file_no, end_file_no=None,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
-    for file_no in range(START_FILE_NO,END_FILE_NO):
+    for file_no in range(start_file_no,end_file_no=None):
+        if end_file_no is None:
+            end_file_no = start_file_no+100
+        
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
@@ -60,4 +62,11 @@ def make_data(plot=False):
 
 
 if __name__=='__main__':
-    make_data(plot=True)
+        import argparse
+        parser = argparse.ArgumentParser(description='IMDB model training')
+        parser.add_argument('--start_file_no', help='number of epochs to run', default='1000')
+        args = parser.parse_args()
+        make_data(args['start_file_no'])
+    
+    
+    
