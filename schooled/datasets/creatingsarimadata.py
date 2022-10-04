@@ -21,13 +21,10 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def make_data(start_file_no, end_file_no=None,plot=False):
+def make_data(start_file_no, end_file_no,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
     for file_no in range(start_file_no,end_file_no):
-        if end_file_no is None:
-            end_file_no = start_file_no+100
-        
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
         csv = '/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
@@ -68,7 +65,8 @@ if __name__=='__main__':
         parser.add_argument('--index', help='number of epochs to run', default='1000')
         args = parser.parse_args()
         start_file_number = int(args.index)*100
-        make_data(start_file_no=start_file_number)
+        end_file_number = start_file_number+100
+        make_data(start_file_no=start_file_number, end_file_number=end_file_number)
     
     
     
