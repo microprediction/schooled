@@ -24,7 +24,7 @@ def skater_single_prediction(ys, f):
 def make_data(start_file_no, end_file_no=None,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
-    for file_no in range(start_file_no,end_file_no=None):
+    for file_no in range(start_file_no,end_file_no):
         if end_file_no is None:
             end_file_no = start_file_no+100
         
