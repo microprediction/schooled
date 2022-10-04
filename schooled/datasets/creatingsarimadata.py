@@ -64,9 +64,9 @@ if __name__=='__main__':
         parser = argparse.ArgumentParser(description='sarima data')
         parser.add_argument('--index', help='number of epochs to run', default='1000')
         args = parser.parse_args()
-        start_file_number = int(args.index)*100
-        end_file_number = start_file_number+100
-        make_data(start_file_no=start_file_number, end_file_number=end_file_number)
+        start_file_no = int(args.index)*100
+        end_file_no = start_file_number+100
+        make_data(start_file_no=start_file_no, end_file_no=end_file_no)
     
     
     
