@@ -64,7 +64,7 @@ def make_data(start_file_no, end_file_no=None,plot=False):
 
 if __name__=='__main__':
         import argparse
-        parser = argparse.ArgumentParser(description='IMDB model training')
+        parser = argparse.ArgumentParser(description='sarima data')
         parser.add_argument('--index', help='number of epochs to run', default='1000')
         args = parser.parse_args()
         start_file_number = args.index*100
