@@ -3,8 +3,8 @@ import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
-NUM_ROWS = 10
-SEQ_LEN = 20
+NUM_ROWS = 10000
+SEQ_LEN = 100
 
 
 def skater_single_prediction(ys, f):
