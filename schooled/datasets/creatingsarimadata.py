@@ -4,8 +4,7 @@ import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
 NUM_ROWS = 10000
-SEQ_LEN = 20
-START_FILE_NO=4
+SEQ_LEN = 100
 
 
 def skater_single_prediction(ys, f):
@@ -22,11 +21,12 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def make_data(plot=False):
+def make_data(start_file_no, end_file_no,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
-    for file_no in range(START_FILE_NO,100):
+    for file_no in range(start_file_no,end_file_no):
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
+        csv = '/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
@@ -60,4 +60,13 @@ def make_data(plot=False):
 
 
 if __name__=='__main__':
-    make_data(plot=True)
+        import argparse
+        parser = argparse.ArgumentParser(description='sarima data')
+        parser.add_argument('--index', help='number of epochs to run', default='1000')
+        args = parser.parse_args()
+        start_file_no = int(args.index)*100
+        end_file_no = start_file_no+100
+        make_data(start_file_no=start_file_no, end_file_no=end_file_no)
+    
+    
+    
