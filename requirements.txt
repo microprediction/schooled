@@ -1,4 +1,4 @@
 wheel
-timemachines
+timemachines>=0.18.5
 pmdarima
 sktime
