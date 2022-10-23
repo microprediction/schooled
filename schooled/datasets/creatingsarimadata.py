@@ -3,7 +3,7 @@ import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
-NUM_ROWS = 10000
+NUM_ROWS = 10
 SEQ_LEN = 100
 
 
@@ -26,7 +26,7 @@ def make_data(start_file_no, end_file_no,plot=False):
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
     for file_no in range(start_file_no,end_file_no):
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        csv = '/output/train_' + str(file_no) + '.csv'
+        csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
