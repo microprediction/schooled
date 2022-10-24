@@ -3,7 +3,7 @@ import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
-NUM_ROWS = 1000
+NUM_ROWS = 10
 SEQ_LEN = 100
 
 
