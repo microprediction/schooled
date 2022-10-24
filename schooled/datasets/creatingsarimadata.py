@@ -3,7 +3,7 @@ import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
 
-NUM_ROWS = 10
+NUM_ROWS = 1000
 SEQ_LEN = 100
 
 
@@ -15,7 +15,7 @@ def skater_single_prediction(ys, f):
         x, x_std, s = f(y=y, k=1, s=s, e=-1)
     y_final = ys[-1]
 
-    # Then tell it to think hard about the last one
+    # Then tell it to think hard abouft the last one
     x, x_std, s = f(y=y_final, k=1, s=s, e=1000)
 
     return x
@@ -23,10 +23,12 @@ def skater_single_prediction(ys, f):
 
 def make_data(start_file_no, end_file_no,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
-    from timemachines.skaters.sk.skautoarima import sk_autoarima as f
+    from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
+    from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
+
     for file_no in range(start_file_no,end_file_no):
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
+        #csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
@@ -34,21 +36,26 @@ def make_data(start_file_no, end_file_no,plot=False):
             okay = False
             while not okay:
                 try:
-                    ys = simulate_arima_like_path(seq_len=SEQ_LEN)
+                    ys_ = simulate_arima_like_path(seq_len=SEQ_LEN+11)[10:]
+                    y_next = ys_[-1]
+                    ys = ys_[:-1]
                     assert np.max(ys)<10
                     assert np.min(ys)>-10
+                    # Run skater twice, maybe
+                    x01 = skater_single_prediction(ys=ys, f=f1)
+                    x02 = skater_single_prediction(ys=ys, f=f2)
+                    if row_no % 20 == 0:
+                        x1 = skater_single_prediction(ys=ys, f=f1)
+                        if abs(x1[0] - x01[0]) > 0.00001:
+                            raise Exception('Skater is non-deterministic ')
+
                     okay = True
                     row_no+=1
                 except:
-                    print('Failed')
+                    print('Arima-like path generation was too wild, or model failed')
 
-            # Run skater twice
-            x0 = skater_single_prediction(ys, f)
-            x1 = skater_single_prediction(ys, f)
-            if abs(x1[0]-x0[0])>0.00001:
-                raise Exception('Skater is non-deterministic ')
 
-            example = np.concatenate([ys, x0] )
+            example = np.concatenate([ys, x01, x02, [y_next, x01[0]-y_next, x02[0]-y_next]] )
             last_few = example[-6:]
             print(last_few)
 
