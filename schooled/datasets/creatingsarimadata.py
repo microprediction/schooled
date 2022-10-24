@@ -1,4 +1,4 @@
-from schooled.wherami import SKATER_DATA, SKATER
+from schooled.wherami import OUTPUT_DIR, SKATER
 import pathlib
 import numpy as np
 from schooled.datasets.ornstein import simulate_arima_like_path
@@ -22,13 +22,12 @@ def skater_single_prediction(ys, f):
 
 
 def make_data(start_file_no, end_file_no,plot=False):
-    pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
     from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
 
     for file_no in range(start_file_no,end_file_no):
-        csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        #csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
+        csv = OUTPUT_DIR + '/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
