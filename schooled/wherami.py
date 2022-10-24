@@ -14,8 +14,11 @@ if RUNNING_LOCALLY:
     INPUT_DIR = OUTPUT_DIR
 else:
     OUTPUT_DIR = '/cnvrg/output'
-    input_dirs = glob('/cnvrg/input/*/', recursive=False)
-    INPUT_DIR = input_dirs[0]+'output'
+    try:
+        input_dirs = glob('/cnvrg/input/*/', recursive=False)
+        INPUT_DIR = input_dirs[0]+'output'
+    except IndexError:
+        INPUT_DIR = ''
 
 
 if __name__=='__main__':
