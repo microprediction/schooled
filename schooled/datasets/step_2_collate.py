@@ -1,5 +1,5 @@
 import pandas as pd
-from schooled.datasets.filenameconventions import matching_generated_csvs, OUTPUT_DIR
+from schooled.datasets.filenameconventions import matching_generated_csvs, INPUT_DIR, OUTPUT_DIR
 
 
 def collate_arima_csv():

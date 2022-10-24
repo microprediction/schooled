@@ -1,4 +1,4 @@
-from schooled.wherami import OUTPUT_DIR
+from schooled.wherami import INPUT_DIR, OUTPUT_DIR
 from glob import glob
 
 
@@ -7,7 +7,7 @@ def generated_csv(file_no):
 
 
 def matching_generated_csvs(keyword:str):
-    return [name for name in glob(OUTPUT_DIR+'/*'+keyword+'*.csv')]
+    return [name for name in glob(INPUT_DIR+'/*'+keyword+'*.csv')]
 
 
 
