@@ -1,7 +1,9 @@
 from schooled.wherami import OUTPUT_DIR, SKATER
 import pathlib
 import numpy as np
+import pandas as pd
 from schooled.datasets.ornstein import simulate_arima_like_path
+from schooled.datasets.filenameconventions import output_csv
 
 NUM_ROWS = 10
 SEQ_LEN = 100
@@ -21,18 +23,11 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def make_data(start_file_no, end_file_no,plot=False):
+def mark_arima_csv(start_file_no, end_file_no, f1, f2, plot=False):
     pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
-    from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
-    from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
 
     for file_no in range(start_file_no,end_file_no):
-<<<<<<< HEAD
-        csv = OUTPUT_DIR + '/train_' + str(file_no) + '.csv'
-=======
-        #csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
->>>>>>> 1cd75fa88d59be05084df229f32943af55398d9c
+        csv = output_csv(file_no=file_no)
         print('Making '+ csv)
         data = list()
         row_no = 0
@@ -70,6 +65,7 @@ def make_data(start_file_no, end_file_no,plot=False):
                 np.savetxt(fname=csv, X=X, delimiter=',')
 
 
+
 if __name__=='__main__':
         import argparse
         parser = argparse.ArgumentParser(description='sarima data')
@@ -77,7 +73,9 @@ if __name__=='__main__':
         args = parser.parse_args()
         start_file_no = int(args.index)*100
         end_file_no = start_file_no+2
-        make_data(start_file_no=start_file_no, end_file_no=end_file_no)
+        from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
+        from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
+        mark_arima_csv(start_file_no=start_file_no, end_file_no=end_file_no, f1=f1, f2=f2)
     
     
     

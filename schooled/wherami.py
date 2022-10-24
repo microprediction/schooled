@@ -6,7 +6,7 @@ ROOT_PATH = str(pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent
 SKATER = 'sf_autoarimawiggly'
 CURRENT_EXPERIMENT = 'sarima'
 
-RUNNING_LOCALLY = 'maxOS' in platform.platform()
+RUNNING_LOCALLY = 'macOS' in platform.platform()
 
 if RUNNING_LOCALLY:
     OUTPUT_DIR = ROOT_PATH + os.path.sep + 'data' + os.path.sep + CURRENT_EXPERIMENT + os.path.sep + SKATER
