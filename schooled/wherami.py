@@ -10,8 +10,10 @@ RUNNING_LOCALLY = 'macOS' in platform.platform()
 
 if RUNNING_LOCALLY:
     OUTPUT_DIR = ROOT_PATH + os.path.sep + 'data' + os.path.sep + CURRENT_EXPERIMENT + os.path.sep + SKATER
+    INPUT_DIR = OUTPUT_DIR
 else:
     OUTPUT_DIR = '/cnvrg/output'
+    INPUT_DIR = '/cnvrg/input'
 
 
 if __name__=='__main__':
