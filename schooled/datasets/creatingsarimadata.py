@@ -27,8 +27,8 @@ def make_data(start_file_no, end_file_no,plot=False):
     from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
 
     for file_no in range(start_file_no,end_file_no):
-        csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        #csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
+        #csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
+        csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
