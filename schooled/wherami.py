@@ -1,6 +1,7 @@
 import os
 import pathlib
 import platform
+from glob import glob
 
 ROOT_PATH = str(pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent)
 SKATER = 'sf_autoarimawiggly'
@@ -13,7 +14,8 @@ if RUNNING_LOCALLY:
     INPUT_DIR = OUTPUT_DIR
 else:
     OUTPUT_DIR = '/cnvrg/output'
-    INPUT_DIR = '/cnvrg/input'
+    input_dirs = glob('/cnvrg/input/*/', recursive=False)
+    INPUT_DIR = input_dirs[0]+'output'
 
 
 if __name__=='__main__':
