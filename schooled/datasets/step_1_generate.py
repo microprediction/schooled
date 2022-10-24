@@ -5,7 +5,7 @@ import pandas as pd
 from schooled.datasets.ornstein import simulate_arima_like_path
 from schooled.datasets.filenameconventions import generated_csv
 
-NUM_ROWS = 10
+NUM_ROWS = 2
 SEQ_LEN = 100
 
 
@@ -59,10 +59,14 @@ def generate_csv(start_file_no, end_file_no, f1, f2, plot=False):
             print(last_few)
 
             data.append(example)
+            
+            
             if row_no % 100 ==0:
                 print(str(row_no)+' of '+str(NUM_ROWS))
                 X = np.array(data)
                 np.savetxt(fname=csv, X=X, delimiter=',')
+        X = np.array(data)
+        np.savetxt(fname=csv, X=X, delimiter=',')    
 
 
 
