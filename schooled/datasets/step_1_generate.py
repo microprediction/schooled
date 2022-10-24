@@ -3,7 +3,7 @@ import pathlib
 import numpy as np
 import pandas as pd
 from schooled.datasets.ornstein import simulate_arima_like_path
-from schooled.datasets.filenameconventions import output_csv
+from schooled.datasets.filenameconventions import generated_csv
 
 NUM_ROWS = 10
 SEQ_LEN = 100
@@ -23,11 +23,11 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def mark_arima_csv(start_file_no, end_file_no, f1, f2, plot=False):
+def generate_csv(start_file_no, end_file_no, f1, f2, plot=False):
     pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
     for file_no in range(start_file_no,end_file_no):
-        csv = output_csv(file_no=file_no)
+        csv = generated_csv(file_no=file_no)
         print('Making '+ csv)
         data = list()
         row_no = 0
@@ -75,7 +75,7 @@ if __name__=='__main__':
         end_file_no = start_file_no+2
         from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
         from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
-        mark_arima_csv(start_file_no=start_file_no, end_file_no=end_file_no, f1=f1, f2=f2)
+        generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, f1=f1, f2=f2)
     
     
     
