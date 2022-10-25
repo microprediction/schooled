@@ -7,8 +7,8 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="schooled",
-    version="0.0.2",
-    description="Surrogates",
+    version="0.0.3",
+    description="Stuff",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/microprediction/schooled",
@@ -20,11 +20,11 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["schooled"],
+    packages=["schooled","schooled.cnvrg","schooled.datasets"],
     test_suite='pytest',
     tests_require=['pytest'],
     include_package_data=True,
-    install_requires=["wheel","timemachines"],
+    install_requires=["wheel","timemachines","cnvrg2"],
     entry_points={
         "console_scripts": [
             "schooled=schooled.__main__:main",

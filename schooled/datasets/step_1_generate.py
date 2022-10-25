@@ -5,7 +5,7 @@ import pandas as pd
 from schooled.datasets.ornstein import simulate_arima_like_path
 from schooled.datasets.filenameconventions import generated_csv
 
-NUM_ROWS = 2
+NUM_ROWS = 1
 SEQ_LEN = 100
 
 
