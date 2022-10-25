@@ -17,7 +17,8 @@ else:
     try:
         input_dirs = glob('/input/*/', recursive=False)
         INPUT_DIR = input_dirs[0]+'output'
-        print({'INPUT_DIR':INPUT_DIR,'input_dir_files':glob(INPUT_DIR+'/*/', recursive=False)})
+        INPUT_CSV = glob(INPUT_DIR+'/*.csv', recursive=False)
+        print({'INPUT_DIR':INPUT_DIR,'input_csv_files':INPUT_CSV[:2],'num_files':len(INPUT_CSV)})
     except IndexError:
         INPUT_DIR = ''
 
