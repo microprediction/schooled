@@ -17,7 +17,7 @@ else:
     try:
         input_dirs = glob('/cnvrg/input/*/', recursive=False)
         INPUT_DIR = input_dirs[0]+'output'
-        print({'INPUT_DIR':INPUT_DIR,'input_dir_files':glob(INPUT_DIR+'/*/', recursive=False})
+        print({'INPUT_DIR':INPUT_DIR,'input_dir_files':glob(INPUT_DIR+'/*/', recursive=False)})
     except IndexError:
         INPUT_DIR = ''
 
