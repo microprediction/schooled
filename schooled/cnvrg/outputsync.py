@@ -8,12 +8,12 @@ if not RUNNING_LOCALLY:
         cnvrg = Cnvrg()
         proj = cnvrg.projects.get("project_name")
         flow = proj.flows.get("flow_name")
-        flow_versions = flow.flow_versions.list()
-        v = []
-        for fv in flow_versions:
-            v.append(fv.title)
-            print(v[0])
-            fv = flow.flow_versions.get(v[0])
+        
+        flow_versions = flow.flow_versions.list()   
+        flow_version_title = flow_versions[0].title
+        print({'flow_version_title':flow_version_title})
+        fv = flow.flow_versions.get(flow_version_title)
+            
         for i in range(len(fv.info()["fv_status"]["task_statuses"][0]["experiments"])):
             e = proj.experiments.get(fv.info()["fv_status"]["task_statuses"][0]["experiments"][i]["id"])
             e.pull_artifacts(wait_until_success=True, poll_interval=5)
