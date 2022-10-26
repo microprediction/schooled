@@ -25,7 +25,7 @@ def skater_single_prediction(ys, f):
     return x
 
 
-def generate_csv(start_file_no, end_file_no, f1, f2, plot=False):
+def generate_csv(start_file_no, end_file_no, fs, plot=False):
     pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
     for file_no in range(start_file_no,end_file_no):
@@ -48,30 +48,32 @@ def generate_csv(start_file_no, end_file_no, f1, f2, plot=False):
                         ys = ys_[:-1]
                         assert np.max(ys)<10
                         assert np.min(ys)>-10
-                        # Run skater twice, maybe
-                        x01 = skater_single_prediction(ys=ys, f=f1)
-                        x02 = skater_single_prediction(ys=ys, f=f2)
-                        if row_no % 20 == 0:
-                            x1 = skater_single_prediction(ys=ys, f=f1)
-                            if abs(x1[0] - x01[0]) > 0.00001:
-                                raise Exception('Skater is non-deterministic ')
+
+                        y_hats_all_horizons = [ skater_single_prediction(ys=ys, f=f) for f in fs ]
 
                         okay = True
                         row_no+=1
                     except:
                         print('Arima-like path generation was too wild, or model failed')
 
-
-                example = np.concatenate([ys, x01, x02, [y_next, x01[0]-y_next, x02[0]-y_next]] )
+                y_hats = [ yh[0] for yh in y_hats_all_horizons ]
+                y_errs = [ y_next-yh for yh in y_hats ]
+                example = np.concatenate([ys, [y_next],y_hats, y_errs ] )
                 last_few = example[-6:]
                 print(last_few)
+                print(str(row_no) + ' of ' + str(NUM_ROWS))
 
                 data.append(example)
 
-
-                if row_no % 100 ==0:
+                if row_no>1:
                     print(str(row_no)+' of '+str(NUM_ROWS))
                     X = np.array(data)
+                    err_abs_mean = np.mean(np.abs(X[:, -len(fs):]),axis=0)
+                    err_rms_mean = np.sqrt(np.mean(X[:, -len(fs):]**2,axis=0))
+                    from pprint import pprint
+                    pprint({'names':['auto','wiggly','mixture'],
+                            'err_abs': err_abs_mean, 'err_rms_mean': err_rms_mean})
+
                     np.savetxt(fname=csv, X=X, delimiter=',')
             X = np.array(data)
             np.savetxt(fname=csv, X=X, delimiter=',')
@@ -87,7 +89,9 @@ if __name__=='__main__':
         end_file_no = start_file_no+2
         from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
         from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
-        generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, f1=f1, f2=f2)
+        from timemachines.skaters.simple.hypocraticensemble import quick_aggressive_ema_ensemble as f3
+        fs = [f1,f2, f3]
+        generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=fs)
     
     
     
