@@ -24,7 +24,7 @@ setup(
     test_suite='pytest',
     tests_require=['pytest'],
     include_package_data=True,
-    install_requires=["wheel","timemachines","cnvrg2"],
+    install_requires=["wheel","timemachines","cnvrgv2"],
     entry_points={
         "console_scripts": [
             "schooled=schooled.__main__:main",
