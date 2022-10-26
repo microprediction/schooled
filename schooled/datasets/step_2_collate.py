@@ -4,7 +4,7 @@ from schooled.datasets.filenameconventions import matching_generated_csvs, INPUT
 
 def collate_arima_csv():
     from schooled.cnvrg.outputsync import sync_previous
-    sync_previous()
+    sync_previous(flow_name='sarima')
     all_csvs = matching_generated_csvs(keyword='')
     print({'all_csvs':all_csvs})
 
