@@ -13,4 +13,4 @@ def matching_generated_csvs(keyword:str):
 
 if __name__=='__main__':
     print(OUTPUT_DIR)
-    print(matching_generated_csvs('train'))
+    print(matching_generated_csvs('generate'))
