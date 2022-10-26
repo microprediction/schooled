@@ -1,14 +1,14 @@
-from schooled.wherami import OUTPUT_DIR, SKATER
+from schooled.whereami import OUTPUT_DIR, SKATER
 import pathlib
 import numpy as np
 import pandas as pd
 from schooled.datasets.ornstein import simulate_arima_like_path
 from schooled.datasets.filenameconventions import generated_csv
 
-NUM_ROWS = 1
+NUM_ROWS = 100
 SEQ_LEN = 100
 
-DEBUG_FLOW = True
+DEBUG_FLOW = False
 
 
 def skater_single_prediction(ys, f):

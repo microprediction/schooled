@@ -1,4 +1,4 @@
-from schooled.wherami import OUTPUT_DIR
+from schooled.whereami import OUTPUT_DIR
 from glob import glob
 
 
