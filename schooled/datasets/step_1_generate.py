@@ -8,6 +8,8 @@ from schooled.datasets.filenameconventions import generated_csv
 NUM_ROWS = 1
 SEQ_LEN = 100
 
+DEBUG_FLOW = True
+
 
 def skater_single_prediction(ys, f):
     """ One step ahead prediction for any skater """
@@ -31,42 +33,48 @@ def generate_csv(start_file_no, end_file_no, f1, f2, plot=False):
         print('Making '+ csv)
         data = list()
         row_no = 0
-        while row_no<NUM_ROWS:
-            okay = False
-            while not okay:
-                try:
-                    ys_ = simulate_arima_like_path(seq_len=SEQ_LEN+11)[10:]
-                    y_next = ys_[-1]
-                    ys = ys_[:-1]
-                    assert np.max(ys)<10
-                    assert np.min(ys)>-10
-                    # Run skater twice, maybe
-                    x01 = skater_single_prediction(ys=ys, f=f1)
-                    x02 = skater_single_prediction(ys=ys, f=f2)
-                    if row_no % 20 == 0:
-                        x1 = skater_single_prediction(ys=ys, f=f1)
-                        if abs(x1[0] - x01[0]) > 0.00001:
-                            raise Exception('Skater is non-deterministic ')
 
-                    okay = True
-                    row_no+=1
-                except:
-                    print('Arima-like path generation was too wild, or model failed')
+        if DEBUG_FLOW:
+            X = np.random.randn(50,20)
+            np.savetxt(fname=csv, X=X, delimiter=',')
+        else:
+            while row_no<NUM_ROWS:
+                okay = False
+
+                while not okay:
+                    try:
+                        ys_ = simulate_arima_like_path(seq_len=SEQ_LEN+11)[10:]
+                        y_next = ys_[-1]
+                        ys = ys_[:-1]
+                        assert np.max(ys)<10
+                        assert np.min(ys)>-10
+                        # Run skater twice, maybe
+                        x01 = skater_single_prediction(ys=ys, f=f1)
+                        x02 = skater_single_prediction(ys=ys, f=f2)
+                        if row_no % 20 == 0:
+                            x1 = skater_single_prediction(ys=ys, f=f1)
+                            if abs(x1[0] - x01[0]) > 0.00001:
+                                raise Exception('Skater is non-deterministic ')
+
+                        okay = True
+                        row_no+=1
+                    except:
+                        print('Arima-like path generation was too wild, or model failed')
 
 
-            example = np.concatenate([ys, x01, x02, [y_next, x01[0]-y_next, x02[0]-y_next]] )
-            last_few = example[-6:]
-            print(last_few)
+                example = np.concatenate([ys, x01, x02, [y_next, x01[0]-y_next, x02[0]-y_next]] )
+                last_few = example[-6:]
+                print(last_few)
 
-            data.append(example)
-            
-            
-            if row_no % 100 ==0:
-                print(str(row_no)+' of '+str(NUM_ROWS))
-                X = np.array(data)
-                np.savetxt(fname=csv, X=X, delimiter=',')
-        X = np.array(data)
-        np.savetxt(fname=csv, X=X, delimiter=',')    
+                data.append(example)
+
+
+                if row_no % 100 ==0:
+                    print(str(row_no)+' of '+str(NUM_ROWS))
+                    X = np.array(data)
+                    np.savetxt(fname=csv, X=X, delimiter=',')
+            X = np.array(data)
+            np.savetxt(fname=csv, X=X, delimiter=',')
 
 
 
