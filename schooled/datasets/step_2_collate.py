@@ -1,6 +1,7 @@
 import pandas as pd
 from schooled.whereami import OUTPUT_DIR
 import time
+from glob import glob
 
 def collate_arima_csv():
     from schooled.cnvrg.outputsync import sync_previous
