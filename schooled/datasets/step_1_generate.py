@@ -6,7 +6,7 @@ from schooled.datasets.ornstein import simulate_arima_like_path
 from schooled.datasets.filenameconventions import generated_csv
 
 NUM_ROWS = 100
-SEQ_LEN = 100
+SEQ_LEN = 50
 
 DEBUG_FLOW = False
 
@@ -71,7 +71,7 @@ def generate_csv(start_file_no, end_file_no, fs, plot=False):
                     err_abs_mean = np.mean(np.abs(X[:, -len(fs):]),axis=0)
                     err_rms_mean = np.sqrt(np.mean(X[:, -len(fs):]**2,axis=0))
                     from pprint import pprint
-                    pprint({'names':['auto','wiggly','mixture'],
+                    pprint({'names':['auto','wiggly','tsa_2','tsa_1'],
                             'err_abs': err_abs_mean, 'err_rms_mean': err_rms_mean})
 
                     np.savetxt(fname=csv, X=X, delimiter=',')
@@ -89,8 +89,10 @@ if __name__=='__main__':
         end_file_no = start_file_no+2
         from timemachines.skaters.sk.skautoarima import sk_autoarima as f1
         from timemachines.skaters.sk.skautoarimawiggly import sk_autoarima_wiggly_huber_d05_m3 as f2
-        from timemachines.skaters.simple.hypocraticensemble import quick_aggressive_ema_ensemble as f3
-        fs = [f1,f2, f3]
+        from timemachines.skaters.tsa.tsaconstant import tsa_p2_d1_q0 as f3
+        from timemachines.skaters.tsa.tsaconstant import tsa_p1_d1_q0 as f4
+
+        fs = [f1,f2, f3, f4]
         generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=fs)
     
     
