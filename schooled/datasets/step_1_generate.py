@@ -1,4 +1,4 @@
-from schooled.wherami import OUTPUT_DIR, SKATER
+from schooled.whereami import OUTPUT_DIR, SKATER
 import pathlib
 import numpy as np
 import pandas as pd
