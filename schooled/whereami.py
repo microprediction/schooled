@@ -13,11 +13,6 @@ if RUNNING_LOCALLY:
     OUTPUT_DIR = ROOT_PATH + os.path.sep + 'data' + os.path.sep + CURRENT_EXPERIMENT + os.path.sep + SKATER
 else:
     OUTPUT_DIR = '/cnvrg/output'
-    try:
-        INPUT_CSVS = glob(OUTPUT_DIR+'/*/output/*.csv', recursive=False)
-        print({'input_csv_files':INPUT_CSVS[:2],'num_files':len(INPUT_CSVS)})
-    except:
-        INPUT_CSVS = []
 
 
 if __name__=='__main__':
