@@ -1,4 +1,4 @@
-from schooled.wherami import RUNNING_LOCALLY
+from schooled.whereami import RUNNING_LOCALLY
 
 if not RUNNING_LOCALLY:
 

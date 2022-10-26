@@ -11,16 +11,13 @@ RUNNING_LOCALLY = 'macOS' in platform.platform()
 
 if RUNNING_LOCALLY:
     OUTPUT_DIR = ROOT_PATH + os.path.sep + 'data' + os.path.sep + CURRENT_EXPERIMENT + os.path.sep + SKATER
-    INPUT_DIR = OUTPUT_DIR
 else:
     OUTPUT_DIR = '/cnvrg/output'
     try:
-        input_dirs = glob('/input/*/', recursive=False)
-        INPUT_DIR = input_dirs[0]+'output'
-        INPUT_CSV = glob(INPUT_DIR+'/*.csv', recursive=False)
-        print({'INPUT_DIR':INPUT_DIR,'input_csv_files':INPUT_CSV[:2],'num_files':len(INPUT_CSV)})
-    except IndexError:
-        INPUT_DIR = ''
+        INPUT_CSVS = glob(OUTPUT_DIR+'/*/output/*.csv', recursive=False)
+        print({'input_csv_files':INPUT_CSVS[:2],'num_files':len(INPUT_CSVS)})
+    except:
+        INPUT_CSVS = []
 
 
 if __name__=='__main__':
