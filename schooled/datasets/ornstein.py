@@ -32,17 +32,13 @@ def simulate_arima_like_path(seq_len, reverse=False):
 
     # Create and fit a model once to generate data
     import random
-    p = random.choice(range(2, 20))
-    d = random.choice(range(0, 3))
-    q = random.choice(range(0, 3))
+    p = random.choice(range(2, 10))
+    d = 1
+    q = random.choice(range(0, p+1))
     scale = random.choice([2, 1, 0.5, -0.5, -1, -2])
     with no_stdout_stderr():
         mod = sm.tsa.SARIMAX(y, order=(p, d, q), trend='c')
         res = mod.fit()
-        res.model_orders['ar_true'] = p
-        res.model_orders['ma_true'] = q
-    from pprint import pprint
-    pprint(res.model_orders)
 
     with no_stdout_stderr():
         sim = res.simulate(seq_len, anchor='end', repetitions=1)
@@ -55,6 +51,22 @@ def simulate_arima_like_path(seq_len, reverse=False):
     else:
         ou = pull_towards_zero(x)
 
+    # Make ou a stupid series instead so that output of fitting is the same format
+    y1 = pd.Series(data=ou, index=pd.period_range(start='1959Q1', freq='Q',periods=len(ou)))
+
+    # Fit it again just to see
+    with no_stdout_stderr():
+        p_fit = int(p/2+0.5)
+        d_fit = 1
+        q_fit = int(q/2+0.5)
+        mod1 = sm.tsa.SARIMAX(y1, order=(p_fit, d_fit, q_fit), trend='c')
+        res1 = mod1.fit()
+        prms = pd.DataFrame(res.params)
+        prms[1] = res1.params
+        prms.columns = ['simulated','fitted']
+    print(prms)
+
+
     return ou
 
 
@@ -63,17 +75,19 @@ def show_example_ornstein():
     y = pull_towards_zero(xs)
     import matplotlib.pyplot as plt
     t = list(range(len(y)))
-    plt.plot(t,xs,t,y)
+    skip = 40
+    plt.plot(t[skip:],xs[skip:],t[skip:],y[skip:])
     plt.grid()
     plt.legend(['raw','ou'])
     plt.show()
 
 
-def show_example_arima_like():
-    y = simulate_arima_like_path(seq_len=500)
+def show_example_arima_like(seq_len=500):
+    y = simulate_arima_like_path(seq_len=seq_len)
     import matplotlib.pyplot as plt
     t = list(range(len(y)))
-    plt.plot(t,y)
+    skip = 40
+    plt.plot(t[skip:],y[skip:])
     plt.grid()
     plt.legend(['raw','ou'])
     plt.show()

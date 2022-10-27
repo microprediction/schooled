@@ -1,4 +1,4 @@
-from schooled.wherami import SKATER_DATA
+from schooled.wherami import OUTPUT_DIR
 import numpy as np
 import pandas as pd
 
@@ -28,7 +28,7 @@ def load_skater_surrogates(seq_len=SEQ_LEN):
 
 
 def load_skater_surrogate(file_no,seq_len):
-    csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
+    csv = OUTPUT_DIR + '/train_' + str(file_no) + '.csv'
     XY = np.loadtxt(csv, delimiter=',')
     XY = XY[:,-seq_len-1:]
     return XY
