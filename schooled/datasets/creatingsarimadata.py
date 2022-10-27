@@ -5,7 +5,7 @@ from schooled.datasets.ornstein import simulate_arima_like_path
 
 NUM_ROWS = 10000
 SEQ_LEN = 100
-
+from copy import deepcopy
 
 def skater_single_prediction(ys, f):
     """ One step ahead prediction for any skater """
@@ -21,12 +21,13 @@ def skater_single_prediction(ys, f):
     return x
 
 
+
 def make_data(start_file_no, end_file_no,plot=False):
     pathlib.Path(SKATER_DATA).mkdir(parents=True, exist_ok=True)
     from timemachines.skaters.sk.skautoarima import sk_autoarima as f
     for file_no in range(start_file_no,end_file_no):
         csv = SKATER_DATA + '/train_' + str(file_no) + '.csv'
-        csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
+        #csv = '/cnvrg/output/train_' + str(file_no) + '.csv'
         print('Making '+ csv)
         data = list()
         row_no = 0
@@ -44,7 +45,6 @@ def make_data(start_file_no, end_file_no,plot=False):
 
             # Run skater twice
             x0 = skater_single_prediction(ys, f)
-            x1 = skater_single_prediction(ys, f)
             if abs(x1[0]-x0[0])>0.00001:
                 raise Exception('Skater is non-deterministic ')
 
