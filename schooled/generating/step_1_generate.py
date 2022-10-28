@@ -81,7 +81,7 @@ def generate_csv(start_file_no, end_file_no, fs, plot=False):
                     err_abs_mean = np.mean(np.abs(X[:, -len(fs):]),axis=0)
                     err_rms_mean = np.sqrt(np.mean(X[:, -len(fs):]**2,axis=0))
                     from pprint import pprint
-                    pprint({'names':['auto','wiggly','tsa_2','tsa_1'],
+                    pprint({'names':FS_SHORT_NAMES,
                             'err_abs': err_abs_mean, 'err_rms_mean': err_rms_mean})
 
                     np.savetxt(fname=csv, X=X, delimiter=',')
