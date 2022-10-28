@@ -95,7 +95,7 @@ if __name__=='__main__':
     parser.add_argument('--index', help='number of epochs to run', default='1000')
     args = parser.parse_args()
     start_file_no = int(args.index)*100
-    end_file_no = start_file_no+5
+    end_file_no = start_file_no+2
 
     generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=FS)
 
