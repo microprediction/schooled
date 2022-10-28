@@ -4,7 +4,7 @@ import numpy as np
 from schooled.generating.ornstein import simulate_arima_like_path
 from schooled.generating.generationfilenames import generated_csv
 
-NUM_ROWS = 500
+NUM_ROWS = 5
 SEQ_LEN = 200
 
 DEBUG_FLOW = False
