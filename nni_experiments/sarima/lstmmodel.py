@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from schooled.datasets.sarimadataset import SarimaDataset, BATCH_SIZE
+from schooled.learning.massageddataset import SarimaDataset, BATCH_SIZE
 
 
 

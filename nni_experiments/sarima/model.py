@@ -5,9 +5,8 @@ import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from schooled.datasets.sarimadataset import SarimaDataset, BATCH_SIZE
+from schooled.learning.massageddataset import SarimaDataset, BATCH_SIZE, TRAIN_SEQ_LEN
 
-from schooled.datasets.sarimadataset import SEQ_LEN
 
 # Hyperparameters to be tuned
 # ---------------------------
@@ -37,8 +36,8 @@ print(params)
 # Load dataset
 # ------------
 
-training_data = SarimaDataset(end_index=50000)
-test_data = SarimaDataset(start_index=10000)
+training_data = SarimaDataset(end_index= 30000)
+test_data = SarimaDataset(start_index= 30000)
 
 train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE)
 test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE)
@@ -63,17 +62,17 @@ class ShallowRegression(nn.Module):
         self.flatten = nn.Flatten()
         if params['num_layers']==0:
             self.stack = nn.Sequential(
-                nn.Linear(in_features=SEQ_LEN, out_features=1)
+                nn.Linear(in_features=TRAIN_SEQ_LEN, out_features=1)
             )
         elif params['num_layers']==1:
             self.stack = nn.Sequential(
-                nn.Linear(in_features=SEQ_LEN, out_features=params['num_1']),
+                nn.Linear(in_features=TRAIN_SEQ_LEN, out_features=params['num_1']),
                 getattr(nn, params['act_0'])(),
                 nn.Linear(in_features=params['num_1'], out_features=1)
             )
         elif params['num_layers']==2:
             self.stack = nn.Sequential(
-                nn.Linear(in_features=SEQ_LEN, out_features=params['num_1']),
+                nn.Linear(in_features=TRAIN_SEQ_LEN, out_features=params['num_1']),
                 getattr(nn, params['act_0'])(),
                 nn.Linear(in_features=params['num_1'], out_features=params['num_2']),
                 getattr(nn, params['act_1'])(),
@@ -81,7 +80,7 @@ class ShallowRegression(nn.Module):
             )
         elif params['num_layers']==3:
             self.stack = nn.Sequential(
-                nn.Linear(in_features=SEQ_LEN,  out_features=params['num_1']),
+                nn.Linear(in_features=TRAIN_SEQ_LEN,  out_features=params['num_1']),
                 getattr(nn, params['act_0'])(),
                 nn.Linear(in_features=params['num_1'], out_features=params['num_2']),
                 getattr(nn, params['act_1'])(),
@@ -111,11 +110,9 @@ def train(data_loader, model, loss_function, optimizer):
     for X, y in data_loader:
         output = model(X)
         loss = loss_function(output, y)
-
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
         total_loss += loss.item()
 
     avg_loss = total_loss / num_batches
