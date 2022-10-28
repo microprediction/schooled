@@ -12,7 +12,7 @@ from schooled.learning.massageddataset import SarimaDataset, BATCH_SIZE, TRAIN_S
 # ---------------------------
 # These are the hyperparameters that will be tuned.
 params = {
-    'num_layers':1,
+    'num_layers':3,
     'num_1':1,
     'num_2':16,
     'num_3':16,

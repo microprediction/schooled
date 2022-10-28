@@ -5,7 +5,7 @@ from schooled.generating.ornstein import simulate_arima_like_path
 from schooled.generating.generationfilenames import generated_csv
 
 NUM_ROWS = 100
-SEQ_LEN = 50
+SEQ_LEN = 200
 
 DEBUG_FLOW = False
 
@@ -88,16 +88,15 @@ def generate_csv(start_file_no, end_file_no, fs, plot=False):
             np.savetxt(fname=csv, X=X, delimiter=',')
 
 
-
 if __name__=='__main__':
-        import argparse
-        parser = argparse.ArgumentParser(description='sarima data')
-        parser.add_argument('--index', help='number of epochs to run', default='1000')
-        args = parser.parse_args()
-        start_file_no = int(args.index)*100
-        end_file_no = start_file_no+2
+    import argparse
+    parser = argparse.ArgumentParser(description='sarima data')
+    parser.add_argument('--index', help='number of epochs to run', default='1000')
+    args = parser.parse_args()
+    start_file_no = int(args.index)*100
+    end_file_no = start_file_no+2
 
-        generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=FS)
-    
+    generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=FS)
+
     
     
