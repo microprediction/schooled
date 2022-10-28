@@ -12,11 +12,11 @@ DEBUG_FLOW = False
 from timemachines.skaters.tsa.tsaconstant import tsa_p1_d1_q0 as f1
 from timemachines.skaters.tsa.tsaconstant import tsa_p2_d1_q0 as f2
 from timemachines.skaters.tsa.tsaconstant import tsa_p3_d1_q0 as f3
-from timemachines.skaters.sk.skautoarima import sk_autoarima as f4
+from timemachines.skaters.simple.trivial import trivial_last_value as f4
 
 
 FS = [f1, f2, f3, f4]
-FS_SHORT_NAMES = ['p1', 'p2', 'p3', 'auto']
+FS_SHORT_NAMES = ['p1', 'p2', 'p3', 'trivial']
 FS_ERROR_NAMES = [fsn + '_err' for fsn in FS_SHORT_NAMES]
 FS_COLS = [ 'y_'+str(i) for i in range(SEQ_LEN-1)] + ['y_last', 'y_next'] + FS_SHORT_NAMES + FS_ERROR_NAMES
 
