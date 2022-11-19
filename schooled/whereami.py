@@ -3,7 +3,7 @@ import pathlib
 import platform
 
 ROOT_PATH = str(pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent)
-CURRENT_EXPERIMENT = 'sarima'
+CURRENT_EXPERIMENT = 'bigsarima'
 RUNNING_LOCALLY = 'macOS' in platform.platform()
 
 if RUNNING_LOCALLY:
