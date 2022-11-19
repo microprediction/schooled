@@ -67,6 +67,7 @@ if __name__=='__main__':
     import matplotlib.pyplot as plt
     ratios = list()
     for i,n_total in enumerate(n_totals):
+        print({'n_total':n_total,'n_big':n_big})
         df = df_big[1:int(math.floor(n_total))]
         ratio = 1/(surrogate_ratio(df) - 1)
         ratios.append(ratio)
