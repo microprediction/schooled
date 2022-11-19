@@ -48,7 +48,7 @@ def surrogate_ratio(df):
     print("Val surrogate MSE score:", sklearn.metrics.mean_squared_error(y_val, y_val_hat))
 
     print("Val model error:", sklearn.metrics.mean_squared_error(y_val, z_val))
-    print('Val MSE relative to last value:',sklearn.metrics.mean_squared_error(y_val, y_val_hat)/sklearn.metrics.mean_squared_error(y_val, np.zeros_like(y_val)))
+    print('Val model error rel to last value:',sklearn.metrics.mean_squared_error(y_val, y_val_hat)/sklearn.metrics.mean_squared_error(y_val, np.zeros_like(y_val)))
     # How does surrogate error compare to original?
     print('Val surrogate prediction error relative to model:',sklearn.metrics.mean_squared_error(z_val, y_val_hat)/sklearn.metrics.mean_squared_error(z_val, y_val))
 
@@ -62,7 +62,7 @@ if __name__=='__main__':
     df_big.rename(inplace=True, columns={'y_next': 'x'})
     n_big = len(df_big)
 
-    n_totals = [ int(math.exp(g)) for g in np.linspace(start=math.log(1000),stop=math.log(n_big),num=5) ]
+    n_totals = [ int(math.exp(g)) for g in np.linspace(start=math.log(1000),stop=math.log(n_big),num=10) ]
 
     import matplotlib.pyplot as plt
     ratios = list()
