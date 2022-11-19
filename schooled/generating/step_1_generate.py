@@ -4,7 +4,7 @@ import numpy as np
 from schooled.generating.ornstein import simulate_arima_like_path
 from schooled.generating.generationfilenames import generated_csv
 
-NUM_ROWS = 500
+NUM_ROWS = 2000
 SEQ_LEN = 200
 
 DEBUG_FLOW = False
@@ -81,7 +81,7 @@ def generate_csv(start_file_no, end_file_no, fs, plot=False):
                     err_abs_mean = np.mean(np.abs(X[:, -len(fs):]),axis=0)
                     err_rms_mean = np.sqrt(np.mean(X[:, -len(fs):]**2,axis=0))
                     from pprint import pprint
-                    pprint({'names':['auto','wiggly','tsa_2','tsa_1'],
+                    pprint({'names':FS_SHORT_NAMES,
                             'err_abs': err_abs_mean, 'err_rms_mean': err_rms_mean})
 
                     np.savetxt(fname=csv, X=X, delimiter=',')
@@ -95,7 +95,7 @@ if __name__=='__main__':
     parser.add_argument('--index', help='number of epochs to run', default='1000')
     args = parser.parse_args()
     start_file_no = int(args.index)*100
-    end_file_no = start_file_no+5
+    end_file_no = start_file_no+2
 
     generate_csv(start_file_no=start_file_no, end_file_no=end_file_no, fs=FS)
 
