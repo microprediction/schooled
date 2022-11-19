@@ -19,10 +19,10 @@ def surrogate_ratio(df):
 
     x_cols = [ c for c in df.columns if 'y_' in c ]
     assert 'x' not in x_cols
-    y = df['p3'].values   # <--- Model we want surrogate for
+    y = df['p3'].values       # <--- Model we want surrogate for
     X = df[x_cols].values
     z = df['x'].values        # <--- The target (next value in the series)
-    y1 = 1.0*y + 0.0*z        # <--- Train on combination of model and target, maybe
+    y1 = 1.00*y + 0.0*z        # <--- Train on combination of model and target, maybe
 
     X = X.astype(np.float32)
     n_test = int(len(df)/10)
@@ -33,8 +33,10 @@ def surrogate_ratio(df):
 
     from sklearn.neural_network import MLPRegressor
 
-    regr = MLPRegressor(random_state=1, max_iter=5000, activation='tanh',
-                        hidden_layer_sizes=(200, 150, 150, 50)).fit(X_train, y_train)
+    regr = MLPRegressor(random_state=1,
+                        max_iter=5000,
+                        activation='relu',
+                        hidden_layer_sizes=(200, 150, 50)).fit(X_train, y_train)
 
     y_train_hat = regr.predict(X_train)
     y_test_hat = regr.predict(X_test)
@@ -48,9 +50,13 @@ def surrogate_ratio(df):
     print("Val surrogate MSE score:", sklearn.metrics.mean_squared_error(y_val, y_val_hat))
 
     print("Val model error:", sklearn.metrics.mean_squared_error(y_val, z_val))
+    print("Surrogate model error:", sklearn.metrics.mean_squared_error(y_val_hat, z_val))
     print('Val model error rel to last value:',sklearn.metrics.mean_squared_error(y_val, y_val_hat)/sklearn.metrics.mean_squared_error(y_val, np.zeros_like(y_val)))
+
     # How does surrogate error compare to original?
     print('Val surrogate prediction error relative to model:',sklearn.metrics.mean_squared_error(z_val, y_val_hat)/sklearn.metrics.mean_squared_error(z_val, y_val))
+    print('Val surrogate abs error relative to model:',
+          sklearn.metrics.mean_absolute_error(z_val, y_val_hat) / sklearn.metrics.mean_absolute_error(z_val, y_val))
 
     ratio = sklearn.metrics.mean_squared_error(z_val, y_val_hat)/sklearn.metrics.mean_squared_error(z_val, y_val)
     return ratio
