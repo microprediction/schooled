@@ -25,7 +25,7 @@ def surrogate_ratio(df):
     y1 = 1.00*y + 0.0*z        # <--- Train on combination of model and target, maybe
 
     X = X.astype(np.float32)
-    n_test = int(len(df)/10)
+    n_test = int(len(df)/5)
     n_train = len(df)-2*n_test
     X_train, y_train, z_train = X[:n_train], y1[:n_train], z[:n_train]
     X_test, y_test, z_test = X[n_train:(n_train+n_test)], y1[n_train:(n_train+n_test)], z[n_train:(n_train+n_test)]
