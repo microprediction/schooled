@@ -34,7 +34,7 @@ def surrogate_ratio(df):
     from sklearn.neural_network import MLPRegressor
 
     regr = MLPRegressor(random_state=1,
-                        max_iter=15000,
+                        max_iter=50000,
                         activation='relu',
                         hidden_layer_sizes=(200, 150, 50)).fit(X_train, y_train)
 
