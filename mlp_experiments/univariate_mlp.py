@@ -19,7 +19,7 @@ def surrogate_ratio(df):
 
     x_cols = [ c for c in df.columns if 'y_' in c ]
     assert 'x' not in x_cols
-    y = df['p2'].values       # <--- Model we want surrogate for
+    y = df['p1'].values       # <--- Model we want surrogate for
     X = df[x_cols].values
     z = df['x'].values        # <--- The target (next value in the series)
     y1 = 1.00*y + 0.0*z        # <--- Train on combination of model and target, maybe
